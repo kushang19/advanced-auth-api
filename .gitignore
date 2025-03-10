@@ -1,0 +1,47 @@
+# Node.js specific
+node_modules/
+.npmrc
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Package-lock files (optional, but recommended to include one of them)
+package-lock.json
+yarn.lock
+
+# Editor or IDE specific
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+
+# OS specific
+.cache
+Thumbs.db
+
+# Environment variables (never commit these!)
+.env
+
+# Logs
+logs/
+*.log
+
+# Testing
+coverage/
+.nyc_output
+
+# Build output
+build/
+dist/
+
+# Optional - if using Docker
+.dockerignore
+
+# Optional - if using GitHub Actions
+.github/workflows/*.yml # Unless you want to commit your workflows
+
+# Optional - other files you don't want to track
+config/ # Unless you have a good reason to commit config files
+.env.* # for multiple .env files like .env.development .env.production
