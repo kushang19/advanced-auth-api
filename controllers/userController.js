@@ -13,11 +13,21 @@ export const getUserProfile = async (req, res) => {
   }
 };
 
-// ✅ Get All Users (Admin Only)
+// ✅ Get All Users (Super Admin Only)
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select("-password");
+    let users;
+    if(req.user.role === "superadmin"){
+      users = await User.find().select("-password"); // ✅ Super Admin gets all users
+    }
+    if(req.user.role === "admin"){
+      users = await User.find({createdBy: req.user._id}).select("-password"); // ✅ Admins only see their users
+    }
+    else{
+      return res.status(403).json({ message: "Access Denied" });
+    }
     res.json(users);
+
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
@@ -72,6 +82,9 @@ export const updateUser = async (req, res) => {
 // ✅ Delete User
 export const deleteUser = async (req, res) => {
   try {
+    if (req.user.role !== "superadmin") {
+      return res.status(403).json({ message: "Access Denied" });
+    }
     const user = await User.findByIdAndDelete(req.params.id);
     if (!user) return res.status(404).json({ message: "User Not Found" });
     res.status(200).json({ message: "User Deleted Successfully" });

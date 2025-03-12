@@ -7,14 +7,14 @@ const router = express.Router();
 // 🔹 Get logged-in user profile (Protected Route)
 router.get("/profile", protect, getUserProfile);
 
-// 🔹 Get all users (Admin Only)
-router.get("/", protect, authorizeRoles("admin"), getAllUsers);
+// 🔹 Super Admin: Get all users
+router.get("/", protect, authorizeRoles("superadmin"), getAllUsers);
 
-// Update User Route
-router.put("/:id", protect, authorizeRoles("admin"), updateUser);
+// 🔹 Admin: Can update only their assigned users
+router.put("/:id", protect, authorizeRoles("superadmin", "admin"), updateUser);
 
-// Delete User Route
-router.delete("/:id", protect, authorizeRoles("admin"), deleteUser);
+// 🔹 Super Admin: Can delete any user
+router.delete("/:id", protect, authorizeRoles("superadmin"), deleteUser);
 
 
 export default router;

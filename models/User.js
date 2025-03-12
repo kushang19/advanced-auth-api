@@ -7,8 +7,17 @@ const userSchema = new mongoose.Schema(
     password: { type: String },
     googleId: { type: String },
     githubId: { type: String },
-    role: { type: String, enum: ["user", "admin"], default: "user" },
+    role: { 
+      type: String, 
+      enum: ["superadmin", "admin", "user"], 
+      default: "user" 
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }, // ✅ Track who created the user
   },
+  
   { timestamps: true }
 );
 

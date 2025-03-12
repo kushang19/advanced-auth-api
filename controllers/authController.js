@@ -7,7 +7,7 @@ import {
 
 // ✅ Register User
 export const registerUser = async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, role, createdBy } = req.body;
 
   try {
     let user = await User.findOne({ email });
@@ -16,14 +16,23 @@ export const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     // Check if it's the first registered user, set as "admin"
     const isFirstUser = (await User.countDocuments()) === 0;
-    const role = isFirstUser ? "admin" : "user";
+    const assignedRole = isFirstUser ? "superadmin" : role || "user";
 
-    user = new User({ name, email, password: hashedPassword, role });
+    user = new User({ 
+      name, 
+      email, 
+      password: hashedPassword, 
+      role: assignedRole,
+      createdBy, // ✅ Track creator (only Admins can create Users)
+    });
+
+    const userWithoutPassword = user.toObject();
+    delete userWithoutPassword.password
 
     await user.save();
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({ message: `User registered as ${assignedRole}`, userWithoutPassword });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
