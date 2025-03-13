@@ -5,9 +5,9 @@ import { protect, authorizeRoles } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 // 🔹 Get logged-in user profile (Protected Route)
-router.get("/profile", protect, getUserProfile);
+router.get("/profile", protect, authorizeRoles("superadmin", "admin", "user"), getUserProfile);
 
-// 🔹 Super Admin: Get all users
+// ✅ Super Admin can view all users
 router.get("/", protect, authorizeRoles("superadmin"), getAllUsers);
 
 // 🔹 Admin: Can update only their assigned users

@@ -4,7 +4,9 @@ import bcrypt from "bcryptjs"; // ✅ Ensure bcrypt is imported
 // ✅ Get User Profile (Logged-in User)
 export const getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId).select("-password"); // Exclude password from response
+    console.log("Kushang --> ", req.user._id);
+    
+    const user = await User.findById(req.user._id).select("-password"); // Exclude password from response
     if (!user) return res.status(404).json({ message: "User not found" });
 
     res.json(user);
@@ -16,22 +18,21 @@ export const getUserProfile = async (req, res) => {
 // ✅ Get All Users (Super Admin Only)
 export const getAllUsers = async (req, res) => {
   try {
-    let users;
-    if(req.user.role === "superadmin"){
-      users = await User.find().select("-password"); // ✅ Super Admin gets all users
-    }
-    if(req.user.role === "admin"){
-      users = await User.find({createdBy: req.user._id}).select("-password"); // ✅ Admins only see their users
-    }
-    else{
+    console.log("🔹 getAllUsers Called by:", req.user.role); // ✅ Debug log
+
+    if (req.user.role !== "superadmin") {
+      console.error("❌ Access Denied: User is not superadmin");
       return res.status(403).json({ message: "Access Denied" });
     }
-    res.json(users);
 
+    const users = await User.find().select("-password"); // ✅ Super Admin gets all users
+    res.json(users);
   } catch (error) {
+    console.error("❌ Server Error in getAllUsers:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 // ✅ Update User
 export const updateUser = async (req, res) => {
