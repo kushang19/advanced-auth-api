@@ -1,0 +1,23 @@
+POST http://localhost:5000/api/auth/register
+{
+  "name": "Regular User",
+  "email": "user@example.com",
+  "password": "user123",
+  "createdBy": "admin-user-id"
+}
+
+POST http://localhost:5000/api/auth/register
+{
+  "name": "Admin User",
+  "email": "admin@example.com",
+  "password": "admin123",
+  "role": "admin",
+  "createdBy": "superadmin-user-id"
+}
+
+POST http://localhost:5000/api/auth/register
+{
+  "name": "Super Admin",
+  "email": "superadmin@example.com",
+  "password": "super123"
+}
